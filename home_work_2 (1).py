@@ -54,7 +54,6 @@ def remove_duplicate_units(array=[10, 11, 2, 3, 5, 8, 23, 11, 2, 5, 76, 43, 2, 3
 # 4.2) вывести 3 наибольших числа из исходного массива
 def three_max_unit(array=[10, 11, 2, 3, 5, 8, 23, 11, 2, 5, 76, 43, 2, 32, 76, 3, 10, 0, 1]):
     """Функция возвращает 3 наибольших значения из массива"""
-    # prepared_array = remove_duplicate_units(array)
     step = 0
     result_unit_value = []
     while step < 3:
@@ -70,7 +69,6 @@ def three_max_unit(array=[10, 11, 2, 3, 5, 8, 23, 11, 2, 5, 76, 43, 2, 32, 76, 3
 def index_min_unit(array=[10, 11, 2, 3, 5, 8, 23, 11, 2, 5, 76, 43, 2, 32, 76, 3, 10, 0, 1]):
     """Функция определяет индекс(-ы) минимального елемента массива"""
     min_value = min(array)
-    # print(min_value)
     result = [index for index, unit_value in enumerate(array) if unit_value == min_value]
     return result
 
@@ -108,7 +106,7 @@ data = [
 
 # 6.1) отсортировать массив из словарей по значению ключа ‘age'
 def sorted_by_age(data):
-    # Функция сортирует массив словарей по значению age
+    """Функция сортирует массив словарей по значению age"""
     sorted_data = sorted(data, key=lambda age: age['age'])
     return sorted_data
 
