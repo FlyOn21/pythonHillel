@@ -3,6 +3,21 @@
 # Given A = [1, 2, 3], the function should return 4.
 # Given A = [−1, −3], the function should return 1.
 
+def smallest_positive_integer(A= [1, 3, 6, 4, 1, 2]):
+    """Function returns the smallest positive integer (greater than 0) that does not occur in A"""
+    set_array_A_positiv_value = {unit for unit in set(A) if unit > 0}
+    if max(A)< 1:
+        pull_search_values = {unit for unit in range(min(A),2) if unit > 0 }
+    elif max(A)>= 1:
+        pull_search_values = {unit for unit in range(min(A), (max(A) + 1)) if unit > 0}
+    if set_array_A_positiv_value != pull_search_values:
+        return min(set.symmetric_difference(set_array_A_positiv_value,pull_search_values))
+    else:
+        return max(pull_search_values)+1
+
+    # print(different_in_set)
+
+
 
 # 2)Abinary gapwithin a positive integer N is any maximal sequence of consecutive zeros that is surrounded by ones at both ends in the binary representation of N.
 # For example, number 9 has binary representation1001and contains a binary gap of length 2. The number 529 has binary representation 1000010001 and contains two binary gaps: one of length 4 and one of length 3. The number 20 has binary representation 10100 and contains one binary gap of length 1. The number 15 has binary representation 1111 and has no binary gaps. The number 32 has binary representation 100000 and has no binary gaps.
@@ -32,3 +47,9 @@
 #     A = [1, 2, 3, 4]
 #     K = 4
 # the function should return [1, 2, 3, 4]
+
+if __name__ == '__main__':
+
+    print('Task #1')
+    result = smallest_positive_integer()
+    print(result)
