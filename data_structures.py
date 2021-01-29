@@ -3,20 +3,17 @@
 # Given A = [1, 2, 3], the function should return 4.
 # Given A = [−1, −3], the function should return 1.
 
-def smallest_positive_integer(A= [1, 3, 6, 4, 1, 2]):
+def smallest_positive_integer(A=[1, 3, 6, 4, 1, 2]):
     """Function returns the smallest positive integer (greater than 0) that does not occur in A"""
     set_array_A_positiv_value = {unit for unit in set(A) if unit > 0}
-    if max(A)< 1:
-        pull_search_values = {unit for unit in range(min(A),2) if unit > 0 }
-    elif max(A)>= 1:
+    if max(A) < 1:
+        pull_search_values = {unit for unit in range(min(A), 2) if unit > 0}
+    elif max(A) >= 1:
         pull_search_values = {unit for unit in range(min(A), (max(A) + 1)) if unit > 0}
     if set_array_A_positiv_value != pull_search_values:
-        return min(set.symmetric_difference(set_array_A_positiv_value,pull_search_values))
+        return min(set.symmetric_difference(set_array_A_positiv_value, pull_search_values))
     else:
-        return max(pull_search_values)+1
-
-    # print(different_in_set)
-
+        return max(pull_search_values) + 1
 
 
 # 2)Abinary gapwithin a positive integer N is any maximal sequence of consecutive zeros that
@@ -30,7 +27,7 @@ def smallest_positive_integer(A= [1, 3, 6, 4, 1, 2]):
 # that, given a positive integer N, returns the length of its longest binary gap. The function should return 0 if N doesn't contain a binary gap.
 # For example, given N = 1041 the function should return 5, because N has binary representation 10000010001 and so
 # its longest binary gap is of length 5. Given N = 32 the function should return 0, because N has binary representation '100000' and thus no binary gaps.
-def longest_binary_gap(N = 32):
+def longest_binary_gap(N=32):
     """Function count binary gap in binary representation integer N"""
     binary_represent_N = bin(N)[2:]
     list_char_binary_represent_N = str(binary_represent_N).strip('0').split('1')
@@ -40,11 +37,10 @@ def longest_binary_gap(N = 32):
     else:
         return max(list_binary_gap)
 
-    # for char in str(binary_represent_N):
-    #     print(char)
 
-
-# 3)An array A consisting of N integers is given. Rotation of the array means that each element is shifted right by one index, and the last element of the array is moved to the first place. For example, the rotation of array A = [3, 8, 9, 7, 6] is [6, 3, 8, 9, 7] (elements are shifted right by one index and 6 is moved to the first place).
+# 3)An array A consisting of N integers is given. Rotation of the array means that each element is shifted right by one index,
+# and the last element of the array is moved to the first place. For example, the rotation of array A = [3, 8, 9, 7, 6] is [6, 3, 8, 9, 7]
+# (elements are shifted right by one index and 6 is moved to the first place).
 # The goal is to rotate array A K times; that is, each element of A will be shifted to the right K times.
 # Write a function:
 # def solution(A, K)
@@ -64,13 +60,25 @@ def longest_binary_gap(N = 32):
 #     A = [1, 2, 3, 4]
 #     K = 4
 # the function should return [1, 2, 3, 4]
+def rotation_array(A=[3, 8, 9, 7, 6], K=3):
+    """Function rotation given array \"K\" times"""
+    counter = 0
+    while counter < K:
+        last_unit_array = A.pop(-1)
+        A.insert(0, last_unit_array)
+        counter += 1
+    return A
+
 
 if __name__ == '__main__':
-
     print('Task #1')
     result = smallest_positive_integer()
     print(result)
 
-    print ('Task #2')
+    print('Task #2')
     result = longest_binary_gap()
+    print(result)
+
+    print('Task #3')
+    result = rotation_array()
     print(result)
