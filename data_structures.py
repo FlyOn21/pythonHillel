@@ -3,12 +3,12 @@
 # Given A = [1, 2, 3], the function should return 4.
 # Given A = [−1, −3], the function should return 1.
 
-def smallest_positive_integer(A=[1, 3, 6, 4, 1, 2]):
+def smallest_positive_integer(A):
     """Function returns the smallest positive integer (greater than 0) that does not occur in A"""
     set_array_A_positiv_value = {unit for unit in set(A) if unit > 0}
     if max(A) < 1:
         pull_search_values = {unit for unit in range(min(A), 2) if unit > 0}
-    elif max(A) >= 1:
+    else:
         pull_search_values = {unit for unit in range(min(A), (max(A) + 1)) if unit > 0}
     if set_array_A_positiv_value != pull_search_values:
         return min(set.symmetric_difference(set_array_A_positiv_value, pull_search_values))
@@ -32,7 +32,7 @@ def longest_binary_gap(N=32):
     binary_represent_N = bin(N)[2:]
     list_char_binary_represent_N = str(binary_represent_N).strip('0').split('1')
     list_binary_gap = [(len(char)) for char in list_char_binary_represent_N if char != '']
-    if list_binary_gap == []:
+    if not list_binary_gap:
         return 0
     else:
         return max(list_binary_gap)
@@ -60,7 +60,7 @@ def longest_binary_gap(N=32):
 #     A = [1, 2, 3, 4]
 #     K = 4
 # the function should return [1, 2, 3, 4]
-def rotation_array(A=[3, 8, 9, 7, 6], K=3):
+def rotation_array(A, K=3):
     """Function rotation given array \"K\" times"""
     counter = 0
     while counter < K:
@@ -72,7 +72,8 @@ def rotation_array(A=[3, 8, 9, 7, 6], K=3):
 
 if __name__ == '__main__':
     print('Task #1')
-    result = smallest_positive_integer()
+    A = [1, 3, 6, 4, 1, 2]
+    result = smallest_positive_integer(A)
     print(result)
 
     print('Task #2')
@@ -80,5 +81,6 @@ if __name__ == '__main__':
     print(result)
 
     print('Task #3')
-    result = rotation_array()
+    A = [3, 8, 9, 7, 6]
+    result = rotation_array(A)
     print(result)
