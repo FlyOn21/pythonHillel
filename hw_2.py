@@ -1,6 +1,7 @@
+import math
 import random
 import sys
-import math
+
 
 # 1) Write a function that emulates the game "rock, scissors, paper"
 # At the entrance, your function accepts your version printed from the console, the computer makes a decision randomly.
@@ -14,19 +15,21 @@ class Game_Rock_Scissors_Paper():
         self.replay_counter = 0
 
     def main(self):
+        """Main function to start the game"""
         people_choice = self.my_choice()
         if people_choice is not False:
-            comp_choice = self.cumputer_choice()
-            result = self.who_winnings(my_choice_input=people_choice, cumputer_choice_input=comp_choice)
+            comp_choice = self.computer_choice()
+            result = self.who_winnings(my_choice_input=people_choice, computer_choice_input=comp_choice)
             print(result)
-            self.play_agaen()
+            self.play_again()
         else:
             print('May be you don\'t want play. By-by')
             sys.exit()
 
 
     def my_choice(self):
-        if self.check_counter() is not False:
+        """Function implemented logic people choice"""
+        if self.check_counter_mistake() is not False:
             my_choice_input = str(input('Please input your choice (1 - rock, 2 - scissors, 3 - paper) : '))
             if my_choice_input not in self.dict_variations_input.keys():
                 self.mistake_counter += 1
@@ -38,27 +41,31 @@ class Game_Rock_Scissors_Paper():
         else:
             return False
 
-    def check_counter(self):
+    def check_counter_mistake(self):
+        """Function control number of people input mistake data"""
         if self.mistake_counter == 5:
             return False
         else:
             return True
 
-    def cumputer_choice(self):
+    def computer_choice(self):
+        """Implemented logic computer choice"""
         values = [values for values in self.dict_variations_input.values()]
         comp_choice_input = random.choice(values)
         return comp_choice_input
 
-    def who_winnings(self, my_choice_input, cumputer_choice_input):
-        all_choice = (my_choice_input, cumputer_choice_input)
+    def who_winnings(self, my_choice_input, computer_choice_input):
+        """Function defines who winning in game"""
+        all_choice = (my_choice_input, computer_choice_input)
         if all_choice in self.tuple_combination_win:
-            return f'You win! {my_choice_input} wins {cumputer_choice_input}'
+            return f'You win! {my_choice_input} wins {computer_choice_input}'
         elif all_choice in self.tuple_combination_draw:
-            return f'Draw,you both choice {cumputer_choice_input}'
+            return f'Draw,you both choice {computer_choice_input}'
         else:
-            return f'You lose! {cumputer_choice_input} wins {my_choice_input}'
+            return f'You lose! {computer_choice_input} wins {my_choice_input}'
 
-    def play_agaen(self):
+    def play_again(self):
+        """Implemented function restarting the game"""
         repeat = str(input('You want play agen. Please entered "n" - NO or "y" - YES: ')).lower()
         if repeat == 'n':
             print('By - by')
@@ -72,7 +79,7 @@ class Game_Rock_Scissors_Paper():
             if self.replay_counter == 5:
                 print('By -by')
             else:
-                return self.play_agaen()
+                return self.play_again()
 
 # 2)Try to imagine a world in which you might have to stay home for (Corona virus) 14 days at any given time.
 # Do you have enough toilet paper(TP) to make it through?
@@ -184,18 +191,22 @@ def win_check(game_board, mark):
 
 
 if __name__ == '__main__':
-    print('Task #1')
-    game = Game_Rock_Scissors_Paper()
-    game.main()
+    # print('Task #1')
+    # game = Game_Rock_Scissors_Paper()
+    # game.main()
 
-    # print('Task #2')
-    # result = toilet_paper_supply()
-    # print(result)
-    #
-    # print('Task #3')
-    # result = encrypt_data()
-    # print(result)
-    #
-    # print('Task #4')
-    # result = main(tic_tac_toe)
-    # print(result)
+    print('Task #2')
+    result = toilet_paper_supply()
+    print(result)
+
+    print('Task #3')
+    result = encrypt_data()
+    print(result)
+
+    print('Task #4')
+    tic_tac_toe = ([
+    ["X", "O", "X"],
+    ["O", "X", "O"],
+    ["O", "X", "X"]])
+    result = main(tic_tac_toe)
+    print(result)
