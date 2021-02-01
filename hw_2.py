@@ -10,7 +10,8 @@ class Game_Rock_Scissors_Paper():
         self.tuple_combination_win = (('rock', 'scissors'), ('scissors', 'paper'), ('paper', 'rock'))
         self.tuple_combination_draw = (('rock', 'rock'), ('scissors', 'scissors'), ('paper', 'paper'))
         self.dict_variations_input = {'1': 'rock', '2': 'scissors', '3': 'paper'}
-        self.counter = 0
+        self.mistake_counter = 0
+        self.replay_counter = 0
 
     def main(self):
         people_choice = self.my_choice()
@@ -18,7 +19,7 @@ class Game_Rock_Scissors_Paper():
             comp_choice = self.cumputer_choice()
             result = self.who_winnings(my_choice_input=people_choice, cumputer_choice_input=comp_choice)
             print(result)
-            self.play_agen()
+            self.play_agaen()
         else:
             print('May be you don\'t want play. By-by')
             sys.exit()
@@ -28,17 +29,17 @@ class Game_Rock_Scissors_Paper():
         if self.check_counter() is not False:
             my_choice_input = str(input('Please input your choice (1 - rock, 2 - scissors, 3 - paper) : '))
             if my_choice_input not in self.dict_variations_input.keys():
-                self.counter += 1
+                self.mistake_counter += 1
                 print('You entered incorrect data, please re-enter. Choose between 1 - rock, 2 - scissors, 3 - paper')
                 return self.my_choice()
             else:
-                self.counter = 0
+                self.mistake_counter = 0
                 return self.dict_variations_input[my_choice_input]
         else:
             return False
 
     def check_counter(self):
-        if self.counter == 5:
+        if self.mistake_counter == 5:
             return False
         else:
             return True
@@ -57,16 +58,21 @@ class Game_Rock_Scissors_Paper():
         else:
             return f'You lose! {cumputer_choice_input} wins {my_choice_input}'
 
-    def play_agen(self):
+    def play_agaen(self):
         repeat = str(input('You want play agen. Please entered "n" - NO or "y" - YES: ')).lower()
         if repeat == 'n':
             print('By - by')
             sys.exit()
         elif repeat == 'y':
+            self.replay_counter = 0
             self.main()
         else:
             print('I did not understand you.')
-            self.play_agen()
+            self.replay_counter +=1
+            if self.replay_counter == 5:
+                print('By -by')
+            else:
+                return self.play_agaen()
 
 # 2)Try to imagine a world in which you might have to stay home for (Corona virus) 14 days at any given time.
 # Do you have enough toilet paper(TP) to make it through?
@@ -153,7 +159,6 @@ def main(tic_tac_toe):
 def join_array(tic_tac_toe):
     """Function unpacking 3x3 matrix in list"""
     general_array = [*tic_tac_toe[0], *tic_tac_toe[1], *tic_tac_toe[2]]
-    print(general_array)
     return general_array
 
 
