@@ -5,7 +5,7 @@ import sys
 
 # 1) Write a function that emulates the game "rock, scissors, paper"
 # At the entrance, your function accepts your version printed from the console, the computer makes a decision randomly.
-class Game_Rock_Scissors_Paper():
+class GameRockScissorsPaper():
     """Class implemented logic game 'rock, scissors, paper'"""
     def __init__(self):
         self.tuple_combination_win = (('rock', 'scissors'), ('scissors', 'paper'), ('paper', 'rock'))
@@ -17,7 +17,7 @@ class Game_Rock_Scissors_Paper():
     def main(self):
         """Main function to start the game"""
         people_choice = self.my_choice()
-        if people_choice is not False:
+        if people_choice:
             comp_choice = self.computer_choice()
             result = self.who_winnings(my_choice_input=people_choice, computer_choice_input=comp_choice)
             print(result)
@@ -29,7 +29,7 @@ class Game_Rock_Scissors_Paper():
 
     def my_choice(self):
         """Function implemented logic people choice"""
-        if self.check_counter_mistake() is not False:
+        if self.check_counter_mistake():
             my_choice_input = str(input('Please input your choice (1 - rock, 2 - scissors, 3 - paper) : '))
             if my_choice_input not in self.dict_variations_input.keys():
                 self.mistake_counter += 1
@@ -92,7 +92,7 @@ class Game_Rock_Scissors_Paper():
 def toilet_paper_supply(dict_tp=None):
     """Function determines if there is enough toilet paper for a family for 14 days"""
     if dict_tp is None:
-        dict_tp = {'people': 3, 'tp': 8}
+        print('Income data is empty')
     stock_for_14_days = dict_tp['people']* 57 * 14
     toilet_paper_now = dict_tp['tp'] * 500
     if stock_for_14_days < toilet_paper_now:
@@ -120,14 +120,12 @@ def encrypt_data(given_input='banana', encrypt_dict=None):
     """Function implemented processing encrypt given input"""
     if encrypt_dict is None:
         encrypt_dict = {'a': '0', 'e': '1', 'i': '2', 'o': '2', 'u': '3'}
-    first_step = [char for char in reversed(given_input)]
+    first_step = reversed(given_input)
     second_step = []
     for char in first_step:
-        if char in encrypt_dict.keys():
+        if char in encrypt_dict:
             char = encrypt_dict[char]
-            second_step.append(char)
-        else:
-            second_step.append(char)
+        second_step.append(char)
     result = ''.join(second_step)
     return result
 
@@ -155,12 +153,11 @@ def encrypt_data(given_input='banana', encrypt_dict=None):
 def main(tic_tac_toe):
     """Function defines who winning in 3x3 matrix of a completed tic-tac-toe game"""
     game_board = join_array(tic_tac_toe)
-    marks = ['X', 'O']
+    marks = ('X', 'O')
     for mark in marks:
         if win_check(game_board, mark) is True:
             return f'Win "{mark}"'
-    else:
-        return 'Draw'
+    return 'Draw'
 
 
 def join_array(tic_tac_toe):
@@ -171,21 +168,14 @@ def join_array(tic_tac_toe):
 
 def win_check(game_board, mark):
     """Function check winnig combination in game"""
-    if mark == game_board[0] and mark == game_board[1] and mark == game_board[2]:
-        return True
-    elif mark == game_board[3] and mark == game_board[4] and mark == game_board[5]:
-        return True
-    elif mark == game_board[6] and mark == game_board[7] and mark == game_board[8]:
-        return True
-    elif mark == game_board[0] and mark == game_board[4] and mark == game_board[8]:
-        return True
-    elif mark == game_board[2] and mark == game_board[4] and mark == game_board[6]:
-        return True
-    elif mark == game_board[0] and mark == game_board[3] and mark == game_board[6]:
-        return True
-    elif mark == game_board[2] and mark == game_board[5] and mark == game_board[8]:
-        return True
-    elif mark == game_board[1] and mark == game_board[4] and mark == game_board[7]:
+    if mark == game_board[0] and mark == game_board[1] and mark == game_board[2] or\
+        mark == game_board[3] and mark == game_board[4] and mark == game_board[5]or\
+        mark == game_board[6] and mark == game_board[7] and mark == game_board[8]or\
+        mark == game_board[0] and mark == game_board[4] and mark == game_board[8]or\
+        mark == game_board[2] and mark == game_board[4] and mark == game_board[6]or\
+        mark == game_board[0] and mark == game_board[3] and mark == game_board[6]or\
+        mark == game_board[2] and mark == game_board[5] and mark == game_board[8]or\
+        mark == game_board[1] and mark == game_board[4] and mark == game_board[7]:
         return True
     return False
 
