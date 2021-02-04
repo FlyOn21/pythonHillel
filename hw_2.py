@@ -1,8 +1,18 @@
 import math
 import random
 import sys
+import time
+from functools import wraps
 
-
+def control_time(func):
+    @wraps(func)
+    def wrapper(*args,**kwargs):
+        start = time.time()
+        do_func = func(*args,**kwargs)
+        end = time.time()
+        print(f'Time function working {start - end}')
+        return do_func
+    return wrapper
 # 1) Write a function that emulates the game "rock, scissors, paper"
 # At the entrance, your function accepts your version printed from the console, the computer makes a decision randomly.
 class GameRockScissorsPaper():
@@ -89,10 +99,11 @@ class GameRockScissorsPaper():
 # "people" ⁠— Number of people in the household.
 # "tp" ⁠— Number of rolls.
 # Return a statement telling the user if they need to buy more TP!
+@control_time
 def toilet_paper_supply(dict_tp=None):
     """Function determines if there is enough toilet paper for a family for 14 days"""
     if dict_tp is None:
-        print('Income data is empty')
+        return ('Income data is empty')
     stock_for_14_days = dict_tp['people']* 57 * 14
     toilet_paper_now = dict_tp['tp'] * 500
     if stock_for_14_days < toilet_paper_now:
@@ -149,11 +160,12 @@ def encrypt_data(given_input='banana', encrypt_dict=None):
 #     ["O", "O", "X"],
 #     ["X", "X", "O"]
 # ]) ➞ "Draw"
-
+@control_time
 def main(tic_tac_toe):
     """Function defines who winning in 3x3 matrix of a completed tic-tac-toe game"""
     game_board = join_array(tic_tac_toe)
     marks = ('X', 'O')
+    time.sleep(3)
     for mark in marks:
         if win_check(game_board, mark) is True:
             return f'Win "{mark}"'
@@ -200,3 +212,5 @@ if __name__ == '__main__':
     ["O", "X", "X"]])
     result = main(tic_tac_toe)
     print(result)
+    help(result)
+
