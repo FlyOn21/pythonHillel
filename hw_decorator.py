@@ -61,6 +61,7 @@ def sum_all_arg(x, y, z=None) -> int:
 
 
 def caching_funk_work(funk):
+    """Decorator impemented process caching the results of executing the wrapped function"""
     @wraps(funk)
     def wrapper(*args, **kwargs):
         given_args = ''.join([str(arg) for arg in args if arg is not None])
