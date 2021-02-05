@@ -5,7 +5,7 @@ from functools import wraps
 # ЗАДАЧА-1
 # Написать свой декоратор который будет проверять остаток от деления числа 100 на результат работы функции ниже.
 # Если остаток от деления = 0, вывести сообщение "We are OK!», иначе «Bad news guys, we got {}» остаток от деления.
-def division_by_100(func):
+def division_by_one_hundred(func):
     """Decorator check the remainder of dividing 100 by the result of the function below """
 
     @wraps(func)
@@ -20,8 +20,8 @@ def division_by_100(func):
     return wrapper
 
 
-@division_by_100
-def random_choice_number() -> int:
+@division_by_one_hundred
+def random_choice_number():
     number = random.choice(range(100, 300))
     return number
 
@@ -48,8 +48,10 @@ def check_given_data(func):
 
 
 @check_given_data
-def sum_all_arg(x, y, z=None) -> int:
-    return x + y + z
+def divisible_by_given_divider(divider = 2, start_sequences = 0, finish_sequences = 10):
+    result_sequences = [char for char in range(start_sequences, finish_sequences) if char%divider == 0]
+    return result_sequences
+
 
 
 # ЗАДАЧА-3
@@ -60,8 +62,9 @@ def sum_all_arg(x, y, z=None) -> int:
 # количество раз обращений в cache.
 
 
-def caching_funk_work(funk):
+def caching_functions_work(funk):
     """Decorator impemented process caching the results of executing the wrapped function"""
+
     @wraps(funk)
     def wrapper(*args, **kwargs):
         given_args = ''.join([str(arg) for arg in args if arg is not None])
@@ -87,7 +90,7 @@ def caching_funk_work(funk):
     return wrapper
 
 
-@caching_funk_work
+@caching_functions_work
 def fibonacci(n):
     if n in (1, 2):
         return 1
@@ -100,10 +103,9 @@ if __name__ == '__main__':
     print(result)
 
     print('Task #2')
-    result = sum_all_arg(1, 10, 12)
+    result = divisible_by_given_divider(3, 10, 300)
     print(result)
 
     print('Task #3')
     result = fibonacci(40)
     print(result)
-
