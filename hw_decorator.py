@@ -11,10 +11,10 @@ def division_by_one_hundred(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         result_func = func(*args, **kwargs)
-        if result_func % 100 == 0:
+        if 100 % result_func == 0:
             print("We are OK!")
         else:
-            print(f"Bad news guys, we got {result_func % 100}")
+            print(f"Bad news guys, we got {100 % result_func}")
         return result_func
 
     return wrapper
@@ -22,7 +22,7 @@ def division_by_one_hundred(func):
 
 @division_by_one_hundred
 def random_choice_number():
-    number = random.choice(range(100, 300))
+    number = random.choice(range(0, 100))
     return number
 
 
@@ -37,7 +37,7 @@ def check_given_data(func):
     def wrapper(*args, **kwargs):
         given_data = [arg for arg in args if arg is not None] + \
                      [value for key, value in kwargs.items() if value is not None]
-        if bool(given_data) is not True:
+        if not given_data:
             raise ValueError("Current function hasn't any arguments or None")
         for data in given_data:
             if isinstance(data, str):
@@ -48,10 +48,9 @@ def check_given_data(func):
 
 
 @check_given_data
-def divisible_by_given_divider(divider = 2, start_sequences = 0, finish_sequences = 10):
-    result_sequences = [char for char in range(start_sequences, finish_sequences) if char%divider == 0]
+def divisible_by_given_divider(divider=2, start_sequences=0, finish_sequences=10):
+    result_sequences = [char for char in range(start_sequences, finish_sequences) if char % divider == 0]
     return result_sequences
-
 
 
 # ЗАДАЧА-3
@@ -106,6 +105,6 @@ if __name__ == '__main__':
     result = divisible_by_given_divider(3, 10, 300)
     print(result)
 
-    print('Task #3')
-    result = fibonacci(40)
-    print(result)
+    # print('Task #3')
+    # result = fibonacci(40)
+    # print(result)
