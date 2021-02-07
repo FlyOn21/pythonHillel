@@ -21,3 +21,13 @@ def time_do(funk):
         return result
 
     return wrapper
+
+
+@time_do
+def random_choice_number():
+    number = random.choice(range(0, 100))
+    return number
+
+
+if __name__ == '__main__':
+    result = random_choice_number()

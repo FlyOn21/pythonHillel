@@ -105,6 +105,6 @@ if __name__ == '__main__':
     result = divisible_by_given_divider(3, 10, 300)
     print(result)
 
-    # print('Task #3')
-    # result = fibonacci(40)
-    # print(result)
+    print('Task #3')
+    result = fibonacci(40)
+    print(result)
