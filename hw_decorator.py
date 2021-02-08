@@ -74,11 +74,9 @@ def caching_functions_work(funk):
             wrapper.counter_used_cache += 1
             print(f'Used cache with counter = {wrapper.counter_used_cache}')
             return cache[given_data]
-        else:
-            cache[given_data] = funk(*args, **kwargs)
-            result = funk(*args, **kwargs)
-            counter_funk_dict[funk] += 1
-            print(f'Function executed with counter = {counter_funk_dict[funk]}, function result = {result}')
+        cache[given_data] = funk(*args, **kwargs)
+        counter_funk_dict[funk] += 1
+        print(f'Function executed with counter = {counter_funk_dict[funk]}, function result = {result}')
         print(cache)
         return funk(*args, **kwargs)
 
