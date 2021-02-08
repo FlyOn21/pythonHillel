@@ -160,11 +160,11 @@ if __name__ == "__main__":
     func = fibonacci(450)
     print(func)
 
-    metod_cache_info_1 = fibonacci.cache_info()
-    print(metod_cache_info_1)
+    method_cache_info_1 = fibonacci.cache_info()
+    print(method_cache_info_1)
 
     func_2 = fibonacci_2(300)
     print(func_2)
 
-    metod_cache_info_2 = fibonacci_2.cache_info()
-    print(metod_cache_info_2)
+    method_cache_info_2 = fibonacci_2.cache_info()
+    print(method_cache_info_2)
