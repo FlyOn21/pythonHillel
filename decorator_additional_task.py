@@ -40,20 +40,21 @@ import os
 #
 #
 # my_func.cache_clear()
-def my_lru_cache(max_size=599):
+def my_lru_cache(max_size=1000):
     def caching(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             input_args_kwargs = prepare_input_data(*args, **kwargs)
-            if func_key_str in cache:
+            if func_key_str in cache: # Checking result of the function is available with the given parameters in the cache
                 for unit in cache[func_key_str]:
                     if input_args_kwargs in unit["input_args"]:
                         cache[f'cache_usage_{func_key_str}'] += 1
-                        unit["time"] = str(datetime.now())
+                        unit["time"] = str(datetime.now()) #changing last used time
                         json_dump(cache)
                         return unit["func_do_values"]
             result_func = func(*args, **kwargs)
-            new_unit_in_cache = {"input_args": input_args_kwargs,
+            clear_cache_on_overflow(cache) # Checking if the cache is full
+            new_unit_in_cache = {"input_args": input_args_kwargs, # Create a new unit in cache
                                  "func_do_values": result_func,
                                  "time": str(datetime.now())}
             if not func_key_str in cache:
@@ -62,11 +63,11 @@ def my_lru_cache(max_size=599):
                 cache[func_key_str] = []
             cache[func_key_str].append(new_unit_in_cache)
             cache[f"usage_{func_key_str}"] += 1
-            clear_cache_on_overflow(cache)
             json_dump(cache)
             return result_func
 
         def cache_info():
+            """Return information about used cache, used caching function and free space in cache"""
             try:
                 free_cache_space = max_size - all_space_cache()
                 calculated_func = cache[f"usage_{func_key_str }"]
@@ -77,6 +78,7 @@ def my_lru_cache(max_size=599):
                 return "Сache not found"
 
         def cache_clear():
+            """Clear cache file"""
             try:
                 path = os.path.abspath(f'cache/cache_{func_key_str}.json')
                 os.remove(path)
@@ -103,6 +105,7 @@ def my_lru_cache(max_size=599):
                 return cache
 
         def all_space_cache():
+            """Getting data on how full the cache is """
             all_space = 0
             for key, value in cache.items():
                 if isinstance(value, list):
@@ -111,20 +114,19 @@ def my_lru_cache(max_size=599):
             return all_space
 
         def clear_cache_on_overflow(cache, del_element=1):
+            """Checking if the cache is full and deleting obsolete data"""
             all_space = all_space_cache()
             if all_space < max_size:
                 return cache
-            try:
-                sorted_cache_values_func = sorted(cache[func_key_str], key=lambda time: time['time'],reverse=True)
-                clear_sorted_cache = sorted_cache_values_func[:(len(sorted_cache_values_func) - del_element)]
-                cache[func_key_str] = clear_sorted_cache
-                json_dump(cache)
-                return
-            except KeyError:
-                pass
+            sorted_cache_values_func = sorted(cache[func_key_str], key=lambda time: time['time'],reverse=True)
+            clear_sorted_cache = sorted_cache_values_func[:(len(sorted_cache_values_func) - del_element)]
+            cache[func_key_str] = clear_sorted_cache
+            json_dump(cache)
+            return cache
 
 
         def prepare_input_data(*args, **kwargs):
+            """Preparing input data"""
             input_args = ''.join([str(arg) for arg in args if arg is not None])
             input_kwargs_step_1 = sorted([(key, value) for key, value in kwargs.items() if value is not None])
             input_kwargs_step_2 = ''.join([str(char) for unit in input_kwargs_step_1 for char in unit])
@@ -150,31 +152,21 @@ def fibonacci_2(n):
         return 1
     return fibonacci_2(n - 1) + fibonacci_2(n - 2)
 
-@my_lru_cache()
-def fibonacci_3(n):
-    if n in (1, 2):
-        return 1
-    return fibonacci_3(n - 1) + fibonacci_3(n - 2)
+
+
+
 
 if __name__ == "__main__":    
-    func = fibonacci(400)
+    func = fibonacci(450)
     print(func)
     
     metod_cache_info_1 = fibonacci.cache_info()
     print(metod_cache_info_1)
 
     
-    func_2 = fibonacci_2(500)
+    func_2 = fibonacci_2(300)
     print(func_2)
     
     metod_cache_info_2 = fibonacci_2.cache_info()
     print(metod_cache_info_2)
 
-    
-    func_3 = fibonacci_3(600)
-    print(func_3)
-    
-    metod_cache_info_3 = fibonacci_3.cache_info()
-    print(metod_cache_info_3)
-
-    metod_cache_clear_3 = fibonacci_3.cache_clear()
