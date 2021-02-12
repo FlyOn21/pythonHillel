@@ -1,0 +1,15 @@
+190.117.115.150 | most popular days of activity: 'MONDAY', 'THURSDAY', 'SATURDAY' | number of visits to the resource: 36
+
+89.191.131.243 | most popular days of activity: 'TUESDAY', 'THURSDAY', 'MONDAY', 'SATURDAY' | number of visits to the resource: 44
+
+37.59.115.136 | most popular days of activity: 'WEDNESDAY' | number of visits to the resource: 52
+
+5.197.231.174 | most popular days of activity: 'TUESDAY', 'SUNDAY', 'SATURDAY' | number of visits to the resource: 44
+
+190.93.176.11 | most popular days of activity: 'SATURDAY', 'SUNDAY', 'WEDNESDAY', 'THURSDAY' | number of visits to the resource: 49
+
+180.247.131.229 | most popular days of activity: 'FRIDAY', 'TUESDAY', 'SUNDAY', 'THURSDAY', 'SATURDAY' | number of visits to the resource: 33
+
+213.27.152.15 | most popular days of activity: 'SUNDAY', 'SATURDAY', 'FRIDAY', 'THURSDAY' | number of visits to the resource: 42
+
+Most popular times of user activity from 9 hour to 10 hour
