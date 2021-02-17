@@ -117,7 +117,7 @@ class JsonFileHandler():
         return result_read_file_list
 
     def __copy_file_to_write_(self, files_numbers_to_write):
-        """Method copies the original and creates a dictionary in which the key is the path to the copy of
+        """Method copies the original json file and creates a dictionary in which the key is the path to the copy of
         the file, and the value is the contents of the file"""
         result_path_data_dict = {}
         list_copy_file_path = []
