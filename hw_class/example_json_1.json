@@ -1,0 +1,35 @@
+{
+    "@odata.context": "/redfish/v1/$metadata#EthernetInterfaceCollection.EthernetInterfaceCollection",
+    "@odata.etag": "W/\"DEA5297D\"",
+    "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/",
+    "@odata.type": "#EthernetInterfaceCollection.EthernetInterfaceCollection",
+    "Description": "Collection of System Network Interfaces",
+    "Members": [
+        {
+            "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/1/"
+        },
+        {
+            "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/2/"
+        },
+        {
+            "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/3/"
+        },
+        {
+            "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/4/"
+        },
+        {
+            "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/5/"
+        },
+        {
+            "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/6/"
+        },
+        {
+            "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/7/"
+        },
+        {
+            "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/8/"
+        }
+    ],
+    "Members@odata.count": 8,
+    "Name": "System Network Interfaces"
+}
