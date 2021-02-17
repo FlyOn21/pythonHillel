@@ -42,7 +42,7 @@ def check_one_line(one_line):
     for unit_string in list_string:
         if re.findall(r"\d", unit_string):  # filter digits in line
             continue
-        elif re.findall(template_punctuation, unit_string) is not False:  # cleaning words in a line from punctuation
+        elif re.findall(template_punctuation, unit_string):  # cleaning words in a line from punctuation
             new_unit_string = ''.join(re.findall(r"[А-Яа-яЁё]|\w", unit_string))
             if check_string_len(new_unit_string):  # checking the length of the string according to the condition specified in the task
                 remove_words_list.append(new_unit_string)
@@ -104,8 +104,7 @@ def right_align(source_file_name="task_3_right_align.txt", fillchar=" "):
     result_file_path = check_result_file(source_file_name)
     max_line_length_in_file = max(len(line) for line in source_file_data) # determining the maximum line width
     for line in source_file_data:
-        wight = (max_line_length_in_file - len(line)) + len(line)
-        result_line = line.rjust(wight, fillchar)
+        result_line = line.rjust(max_line_length_in_file, fillchar)
         write_file(result_file_path, result_line)
     return f"Result file:{result_file_path}"
 
