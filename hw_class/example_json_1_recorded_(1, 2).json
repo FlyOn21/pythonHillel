@@ -32,12 +32,12 @@
   ],
   "Members@odata.count": 8,
   "Name": "System Network Interfaces",
-  "@odata.context|Wed Feb 17 16:31:26 2021": "/redfish/v1/$metadata#EthernetInterface.EthernetInterface",
-  "@odata.etag|Wed Feb 17 16:31:26 2021": "W/\"9C785D2A\"",
-  "@odata.id|Wed Feb 17 16:31:26 2021": "/redfish/v1/Systems/1/EthernetInterfaces/1/",
-  "@odata.type|Wed Feb 17 16:31:26 2021": "#EthernetInterface.v1_0_3.EthernetInterface",
-  "Description|Wed Feb 17 16:31:26 2021": "Collection of System Network Interfaces",
-  "Members|Wed Feb 17 16:31:26 2021": [
+  "@odata.context|Wed Feb 17 22:11:21 2021": "/redfish/v1/$metadata#EthernetInterface.EthernetInterface",
+  "@odata.etag|Wed Feb 17 22:11:21 2021": "W/\"9C785D2A\"",
+  "@odata.id|Wed Feb 17 22:11:21 2021": "/redfish/v1/Systems/1/EthernetInterfaces/1/",
+  "@odata.type|Wed Feb 17 22:11:21 2021": "#EthernetInterface.v1_0_3.EthernetInterface",
+  "Description|Wed Feb 17 22:11:21 2021": "Collection of System Network Interfaces",
+  "Members|Wed Feb 17 22:11:21 2021": [
     {
       "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/1/"
     },
@@ -63,8 +63,8 @@
       "@odata.id": "/redfish/v1/Systems/1/EthernetInterfaces/8/"
     }
   ],
-  "Members@odata.count|Wed Feb 17 16:31:26 2021": 8,
-  "Name|Wed Feb 17 16:31:26 2021": "",
+  "Members@odata.count|Wed Feb 17 22:11:21 2021": 8,
+  "Name|Wed Feb 17 22:11:21 2021": "",
   "FullDuplex": true,
   "Id": "1",
   "MACAddress": "48:df:37:33:fc:20",

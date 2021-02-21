@@ -51,11 +51,15 @@ class IpChangeMaker():
 # 4) Получить путь относительный путь к файлу
 # 5) Получить абсолютный путь к файлу
 class JsonFileHandler():
-    def __init__(self, *file_names_json: str):
-        json_files_dict = {number: file_name for number, file_name in enumerate(file_names_json, 1)}
+    def __init__(self, *file_names_json: Union[str, List[str], Tuple[str, ...]]):
+        check_input_data = self.input_data_parser(file_names_json)
+        if check_input_data:
+            json_files_dict = {number: file_name for number, file_name in enumerate(file_names_json[0], 1)}
+        else:
+            json_files_dict = {number: file_name for number, file_name in enumerate(file_names_json, 1)}
         try:
             for key in range(1, (len(json_files_dict) + 1)):
-                if ((json_files_dict[key]).split("."))[-1] != "json":
+                if not json_files_dict[key].endswith('json'):
                     raise NotJSONFileTransferredError(
                         "The class accepts only json files, the passed values of the class arguments are not json")
         except AttributeError:
@@ -68,11 +72,15 @@ class JsonFileHandler():
         """Returns the value of the private attribute of the class"""
         return self.__json_file_dict
 
+    def input_data_parser(self, file_names_json):
+        if isinstance(file_names_json, (list, tuple)):
+            return True
+        return False
+
     def __int_to_list(self, number_files):
         """Checks the data that came to the input of the class method and converts it"""
         if isinstance(number_files, int):
             number_files = [number_files]
-            return number_files
         return number_files
 
     def __json_dump(self, path, write_value):
@@ -178,6 +186,10 @@ class JsonFileHandler():
         dir_name_source_file = os.path.dirname(self.files_abspath(1)[0])
         result_file_path = os.path.join(dir_name_source_file, result_file_name)
         for unit_compound_file_data in compound_file_data:
+            #If there is no file, then we write the
+            # information to the file, if the file is there,
+            # then we supplement the data from the file with
+            # new data and write it to the file
             if os.path.isfile(result_file_path):
                 data = self.__json_load(result_file_path)
                 new_data = self.__change_dict(data, unit_compound_file_data)
@@ -308,7 +320,7 @@ if __name__ == "__main__":
     print(unit_one.last_octet_ip())
 
     print("Task_2")
-    unit_second = JsonFileHandler("example_json_1.json", "example_json_2.json")
+    unit_second = JsonFileHandler(("example_json_1.json", "example_json_2.json"))
     print(unit_second.json_file_dict)
     read_data = unit_second.json_read_file((1, 2))
     unit_second.json_file_compound([1, 2])
