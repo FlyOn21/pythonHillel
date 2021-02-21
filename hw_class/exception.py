@@ -1,0 +1,2 @@
+class NotJSONFileTransferredError(Exception):
+    pass
