@@ -41,9 +41,9 @@ def my_context_manager(dirname, type_exception):
     current_dir_path = os.getcwd()
     if not os.path.isdir(work_dir_path):
         os.mkdir(work_dir_path)
+    os.chdir(work_dir_path)
+    print("Changed directory!!!")
     try:
-        os.chdir(work_dir_path)
-        print("Changed directory!!!")
         yield
     except type_exception:
         print("Directory not found")
