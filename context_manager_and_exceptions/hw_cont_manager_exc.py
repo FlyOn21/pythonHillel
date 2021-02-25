@@ -75,14 +75,14 @@ if __name__ == "__main__":
     print("Task #1")
     with MyContextManager("test_dir", FileNotFoundError):
         print(os.getcwd())
-        os.rmdir(os.path.abspath("test_dir_2"))
-    print(os.getcwd())
+        os.rmdir(os.path.abspath("4.txt"))
+    # print(os.getcwd())
 
-    print("Task #2")
-    with my_context_manager("test_dir", FileNotFoundError):
-        print(os.getcwd())
-        os.rmdir(os.path.abspath("test_dir_2"))
-    print(os.getcwd())
-
-    print("Task #3")
-    permutations = all_permutations(range(10))
+    # print("Task #2")
+    # with my_context_manager("test_dir", FileNotFoundError):
+    #     print(os.getcwd())
+    #     os.rmdir(os.path.abspath("test_dir_2"))
+    # print(os.getcwd())
+    #
+    # print("Task #3")
+    # permutations = all_permutations(range(10))
