@@ -72,14 +72,14 @@
     },
     "Пеноблоки": {
       "description": "Пеноблоки 75 мм",
-      "quantity": 47,
+      "quantity": 17,
       "availability": 1,
       "price": 369.6,
       "category": "Гипсовые изделия, ЖБИ, кирпич"
     },
     "Плита": {
       "description": "Плита пазогребневая влагостойкая",
-      "quantity": 88,
+      "quantity": 3,
       "availability": 1,
       "price": 74.16,
       "category": "Гипсовые изделия, ЖБИ, кирпич"
@@ -93,8 +93,8 @@
     },
     "Ручка": {
       "description": "Ручка",
-      "quantity": 97,
-      "availability": 1,
+      "quantity": 0,
+      "availability": 0,
       "price": 14.607,
       "category": "Other"
     },
@@ -114,24 +114,35 @@
     }
   },
   "baskets": {
-    "1": {
-      "products": {
-        "Пеноблоки": {
-          "units_quantity": true,
-          "units_price": 369.6
-        }
-      },
-      "total_price": 369.6
-    },
     "2": {
-      "products": {
-        "Плита": {
-          "units_quantity": true,
-          "units_price": 74.16
+      "items": {
+        "Пеноблоки": {
+          "units_quantity": 10,
+          "units_price": 3696.0
         }
       },
-      "total_price": 74.16
+      "total_price": 3696.0
     }
   },
-  "orders": {}
+  "orders": {
+    "1": {
+      "items": {
+        "Пеноблоки": {
+          "units_quantity": 10,
+          "units_price": 3696.0
+        },
+        "Плита": {
+          "units_quantity": 5,
+          "units_price": 370.8
+        },
+        "Ручка": {
+          "units_quantity": 20,
+          "units_price": 292.14
+        }
+      },
+      "total_price": 4358.9400000000005,
+      "customer_id": "1",
+      "date_purchased": "Sun Mar  7 16:16:48 2021"
+    }
+  }
 }

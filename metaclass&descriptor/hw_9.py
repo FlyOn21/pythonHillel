@@ -20,14 +20,7 @@ class EmailDescriptor:
 
 
     def __set__(self, instance, value):
-        if not isinstance(value, str):
-            raise EmailValidationError()
-        if not re.findall(r"[@]", value):
-            raise EmailValidationError()
-        email_list = value.split("@")
-        if len(email_list) > 2:
-            raise EmailValidationError()
-        if not re.findall(r"[.]", email_list[1]):
+        if not re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$', value):
             raise EmailValidationError()
         instance._email = value
 
@@ -40,7 +33,6 @@ class MyClass:
 
 
 my_class = MyClass()
-print(my_class.email)
 my_class.email = "validemail@gmail.com"
 print(my_class.email)
 #

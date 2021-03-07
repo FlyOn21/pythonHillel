@@ -1,6 +1,9 @@
 import json
 import os
 import shutil
+import time
+from pprint import pprint
+
 
 # Задача4
 # Необходимо создать модели работы со складскими запасами товаров и процесса оформления заказа этих товаров.
@@ -25,23 +28,11 @@ import shutil
 # Добавить к этой задаче дескриптор для аттрибута цена.
 # При назначении цены товара будет автоматически добавлен НДС 20%
 # При получении цены товара, цена возврщается уже с учетом НДС
-from pprint import pprint
-
-
-class PriceDescriptor():
-    def __get__(self, instance, owner):
-        return instance._price
-
-    def __set__(self, instance, value):
-        if value is None:
-            raise ValueError("Price is always defined")
-        new_price_value = value * 1.2
-        instance._price = new_price_value
 
 
 class DatabaseOpenCloseMixin():
-
-    def backup_database(self, ):
+    """Mixin class created for reading, writing and backup of an impromptu database"""
+    def _backup_database(self):
         try:
             backup_file_path = os.path.abspath("shopDataBaseBackup.json")
             shutil.copyfile(os.path.abspath("shopDataBase.json"), backup_file_path)
@@ -55,14 +46,13 @@ class DatabaseOpenCloseMixin():
         except FileNotFoundError:
             raise FileNotFoundError("Database is not found")
         except json.JSONDecodeError:
-            self.json_dump(data={"warehouse": {}, "baskets": {}, "orders": {}})
-            return self.json_load()
+            return shutil.copyfile(os.path.abspath("shopDataBaseBackup.json"), os.path.abspath("shopDataBase.json"))
+
 
     def json_dump(self, data):
-        self.backup_database()
+        self._backup_database()
         try:
-            with open(os.path.join(os.path.abspath("shopDataBase.json")), 'w',
-                      encoding='UTF-8') as file:
+            with open(os.path.join(os.path.abspath("shopDataBase.json")), 'w',encoding='UTF-8') as file:
                 json.dump(data, file, indent=2, ensure_ascii=False)
         except json.JSONDecodeError:
             shutil.copyfile(os.path.abspath("shopDataBaseBackup.json"), os.path.abspath("shopDataBase.json"))
@@ -70,6 +60,19 @@ class DatabaseOpenCloseMixin():
 
 
 class ShopWarehouse(DatabaseOpenCloseMixin):
+    """Сlass implements work with goods in the store's warehouse"""
+
+    class PriceDescriptor():
+        """A descriptor class for setting the price of an item including NDS"""
+        def __get__(self, instance, owner):
+            return instance._price
+
+        def __set__(self, instance, value):
+            if value is None:
+                raise ValueError("Price is always defined")
+            new_price_value = value * 1.2
+            instance._price = new_price_value
+
     price = PriceDescriptor()
 
     def __init__(self):
@@ -121,81 +124,148 @@ class ShopWarehouse(DatabaseOpenCloseMixin):
 
 class CustomerBasket(DatabaseOpenCloseMixin):
 
-    def __init__(self):
+    def __init__(self, customer_id):
         self._all_database = self.json_load()
+        self._customer_id = str(customer_id)
 
-    def add_products_in_basket(self, product_name, customer_id, units_quantity=1):
-        customer_basket = self._open_customer_basket(customer_id)
-        new_basket = self._check_basket(product_name,units_quantity,customer_basket)
-        if new_basket:
+    def add_products_in_basket(self, product_name, units_quantity=1):
+        customer_basket = self._open_customer_basket()
+        new_basket = self._check_add_in_basket(product_name, units_quantity, customer_basket)
+        if not isinstance(new_basket, tuple):
             self._all_database["baskets"][self._customer_id] = new_basket
             self.json_dump(data=self._all_database)
+            return
+        print(new_basket[1])
 
-    def _open_customer_basket(self, customer_id):
-        self._customer_id = str(customer_id)
+    def _open_customer_basket(self):
         if self._customer_id in self._all_database["baskets"]:
             basket = self._all_database["baskets"][self._customer_id]
             return basket
-        return {"products": {}, "total_price": 0}
+        return {"items": {}, "total_price": 0}
 
-
-    def _check_basket(self, product_name, units_quantity, basket):
+    def _check_add_in_basket(self, product_name, units_quantity, basket):
         try:
             warehouse_unit = self._all_database["warehouse"][product_name]
         except KeyError:
-            return "Product not found"
+            return (False, "Product not found")
         if warehouse_unit["availability"]:
             units_price = warehouse_unit["price"]
             try:
-                if basket["products"][product_name]:
-                    units_quantity_advance = basket["products"][product_name]["units_quantity"]
+                if basket["items"][product_name]:
+                    units_quantity_advance = basket["items"][product_name]["units_quantity"]
                     new_units_quantity = units_quantity_advance + units_quantity
-                    checking_quantity = self._check_quantity(warehouse_unit, units_quantity)
-                    if checking_quantity:
-                        basket["products"][product_name] = {"units_quantity": new_units_quantity,
-                                                            "units_price": round((units_price * new_units_quantity), 3)}
+                    checking_quantity = self._check_quantity(warehouse_unit, new_units_quantity)
+                    if not isinstance(checking_quantity, tuple):
+                        basket["items"][product_name] = {"units_quantity": new_units_quantity,
+                                                         "units_price": round((units_price * new_units_quantity), 3)}
                     else:
                         return checking_quantity
             except KeyError:
-                checking_quantity = self._check_quantity(warehouse_unit,units_quantity)
-                if checking_quantity:
-                    basket["products"][product_name] = {"units_quantity": checking_quantity,
-                                                "units_price": round((units_price * checking_quantity), 3)}
+                checking_quantity = self._check_quantity(warehouse_unit, units_quantity)
+                if not isinstance(checking_quantity, tuple):
+                    basket["items"][product_name] = {"units_quantity": units_quantity,
+                                                     "units_price": round((units_price * units_quantity), 3)}
                 else:
                     return checking_quantity
             basket["total_price"] = 0
-            for product, product_basket_data in basket["products"].items():
-                basket["total_price"] = basket["total_price"]+product_basket_data["units_price"]
+            for product, product_basket_data in basket["items"].items():
+                basket["total_price"] = basket["total_price"] + product_basket_data["units_price"]
             return basket
-        return False
+        return (False, "Product not availability")
 
-    def _check_quantity(self,warehouse_unit,units_quantity):
+    def _check_quantity(self, warehouse_unit, units_quantity):
         if warehouse_unit["quantity"] < units_quantity:
             quantity = warehouse_unit["quantity"]
-            return f"There are not enough units of the product, currently available {quantity}"
+            description = warehouse_unit["description"]
+            return (False, f"There are not enough units of the product {description}, currently available {quantity}")
         return True
 
-    def basket_overview(self, customer_id):
-        basket = self._open_customer_basket(customer_id)
-        products = basket["products"]
+    def basket_overview(self):
+        basket = self._open_customer_basket()
+        products = basket["items"]
         total_price = basket["total_price"]
         return f"Products {products} | total price {total_price}"
 
-# class CustomerOrder(DatabaseOpenCloseMixin):
+    def _delete_basket(self):
+        try:
+            self._all_database["baskets"].pop(self._customer_id)
+            self.json_dump(data=self._all_database)
+        except KeyError:
+            pass
 
+    def delete_basket_unit(self):
+        pass
+
+
+class CustomerOrder(CustomerBasket, DatabaseOpenCloseMixin):
+
+    def __init__(self, customer_id):
+        super().__init__(CustomerBasket)
+        self._customer_id = str(customer_id)
+
+    def place_an_order(self):
+        try:
+            order = self._all_database["baskets"][self._customer_id]
+            cheng_quantity = self._cheng_quantity_in_warehouse(order)
+            if not isinstance(cheng_quantity, tuple):
+                order["customer_id"] = self._customer_id
+                order["date_purchased"] = time.ctime()
+                self._all_database["orders"][self._order_id()] = order
+                self._delete_basket()
+                self.json_dump(data=self._all_database)
+                return
+            return cheng_quantity [1]
+        except KeyError:
+            return (False, "User's basket is empty")
+
+    def _order_id(self):
+        all_orders = self._all_database["orders"]
+        last_order = len(all_orders)
+        order_id = last_order + 1
+        return order_id
+
+    def _cheng_quantity_in_warehouse(self, order):
+        warehouse = self._all_database["warehouse"]
+        sold_item = self._sold_item(order)
+        for sold_item_name, sold_quantity in sold_item.items():
+            if sold_item_name in warehouse:
+                old_units_quantity = warehouse[sold_item_name]["quantity"]
+                new_units_quantity = old_units_quantity - sold_quantity
+                if new_units_quantity < 0:
+                    warehouse[sold_item_name]["quantity"] = 0
+                    warehouse[sold_item_name]["availability"] = 0
+                    return (False, f"Product {sold_item_name} is out of stock or there "
+                                   f"is no required quantity of the product. In stock {old_units_quantity}")
+                elif new_units_quantity == 0:
+                    warehouse[sold_item_name]["availability"] = 0
+                warehouse[sold_item_name]["quantity"] = new_units_quantity
+        self.json_dump(data=self._all_database)
+        return True
+
+    def _sold_item(self, order):
+        sold_item = {}
+        items = order["items"]
+        for product_name, basket_data in items.items():
+            for key, values in basket_data.items():
+                if key == "units_quantity":
+                    sold_item[product_name] = values
+        return sold_item
 
 
 if __name__ == "__main__":
-    unit = ShopWarehouse()
-    # unit.add_products("Качели","Крылатые качели", 3,25.0)
-    unit.delete_products("Окно")
-    print(unit.product_balanse("Пенофол"))
-    # pprint(unit.all_products_quantity())
-    print(unit.category_items("Other"))
-    unit_second = CustomerBasket()
-    unit_second.add_products_in_basket("Пеноблоки", 1, 5)
-    unit_second.add_products_in_basket("Свеча", 2, 6)
-    unit_second.add_products_in_basket("Плита", 2, 3)
-    unit_second.add_products_in_basket("Плита", 2, 4)
-    # print(unit_second.basket_overview(1))
-    # unit_second.add_products_in_basket("Плита", 3, 19)
+    # unit = ShopWarehouse()
+    # # unit.add_products("Качели","Крылатые качели", 3,25.0)
+    # unit.delete_products("Окно")
+    # print(unit.product_balanse("Пенофол"))
+    # # pprint(unit.all_products_quantity())
+    # print(unit.category_items("Other"))
+    unit_second = CustomerBasket(customer_id=2)
+    unit_second.add_products_in_basket("Пеноблоки", 10)
+    # unit_second.add_products_in_basket("Свеча", 5)
+    unit_second.add_products_in_basket("Плита", 3)
+    unit_second.add_products_in_basket("Плита", 2)
+    # print(unit_second.basket_overview())
+    unit_second.add_products_in_basket("Ручка", 20)
+    # # unit_second._delete_basket()
+    # unit_third = CustomerOrder(1)
+    # unit_third.place_an_order()
