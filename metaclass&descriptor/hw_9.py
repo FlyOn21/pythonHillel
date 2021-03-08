@@ -34,9 +34,9 @@ class MyClass:
 
 my_class = MyClass()
 my_class.email = "validemail@gmail.com"
+my_class.email = "va.lidemail@gmail.com"
 print(my_class.email)
-#
-# my_class.email = "novalidemail"
+
 
 
 # Raised Exception
@@ -69,20 +69,20 @@ assert id(c) == id(b)
 # реализовать дескриптор IngegerField(), который будет хранить уникальные
 # состояния для каждого класса где он объявлен
 
-class IngegerField:
+class IntegerField:
 
     def __init__(self, attr_name):
-        self.attr_name = attr_name
+        self._attr_name = attr_name
 
     def __get__(self, instance, owner):
-        return instance.__dict__[self.attr_name]
+        return instance.__dict__[self._attr_name]
 
     def __set__(self, instance, value):
-        instance.__dict__[self.attr_name] = value
+        instance.__dict__[self._attr_name] = value
 
 
 class Data:
-    number = IngegerField("number")
+    number = IntegerField("number")
 
 
 data_row = Data()

@@ -3,7 +3,7 @@ import os
 import shutil
 import time
 from pprint import pprint
-from typing import NoReturn, List, Dict, Union, Tuple
+from typing import NoReturn, List, Dict, Union, Tuple, Any
 
 
 # Задача4
@@ -137,7 +137,7 @@ class CustomerBasket(DatabaseOpenCloseMixin):
         self._all_database = self.json_load()
         self._customer_id = str(customer_id)  # basket owner id
 
-    def add_products_in_basket(self, product_name: str, units_quantity: int = 1):
+    def add_products_in_basket(self, product_name: str, units_quantity: int = 1) -> Union[Tuple[bool, str], Any]:
         """Add products in customer basket"""
         customer_basket = self._open_customer_basket()
         new_basket = self._check_add_in_basket(product_name, units_quantity, customer_basket)
@@ -145,7 +145,7 @@ class CustomerBasket(DatabaseOpenCloseMixin):
             self._all_database["baskets"][self._customer_id] = new_basket
             self.json_dump(data=self._all_database)
             return
-        print(new_basket[1])
+        return new_basket
 
     def _open_customer_basket(self) -> Dict:
         """Checks if the user has a basket or creates a new one"""
@@ -222,7 +222,7 @@ class CustomerOrder(CustomerBasket, DatabaseOpenCloseMixin):
         super().__init__(CustomerBasket)
         self._customer_id = str(customer_id)
 
-    def place_an_order(self):
+    def place_an_order(self) -> Union[Tuple[bool, str], Any]:
         """Function implements the order confirmation process"""
         try:
             order = self._all_database["baskets"][self._customer_id]  # take customer basket statement
@@ -235,11 +235,11 @@ class CustomerOrder(CustomerBasket, DatabaseOpenCloseMixin):
                 self._clear_basket()  # basket that went into the order is cleared
                 self.json_dump(data=self._all_database)
                 return
-            return change_quantity[1]
+            return change_quantity
         except KeyError:
             return (False, "User's basket is empty")
 
-    def print_order_details(self, order_id:int) -> str:
+    def print_order_details(self, order_id: int) -> str:
         """Print order details"""
         try:
             order = self._all_database["orders"][str(order_id)]
@@ -286,7 +286,7 @@ class CustomerOrder(CustomerBasket, DatabaseOpenCloseMixin):
 
 if __name__ == "__main__":
     unit_one = ShopWarehouse()
-    unit_one.add_products("Качели","Крылатые качели", 3,25.0)
+    unit_one.add_products("Качели", "Крылатые качели", 3, 25.0)
     unit_one.delete_products("Окно")
     print(unit_one.product_balans("Пенофол"))
     pprint(unit_one.all_products_quantity())
