@@ -1,0 +1,164 @@
+{
+  "warehouse": {
+    "Гидростеклоизол": {
+      "description": "Гидростеклоизол",
+      "quantity": 73,
+      "availability": 1,
+      "price": 26.5,
+      "category": "Гидроизоляция и утеплители"
+    },
+    "Глимс": {
+      "description": "Глимс ВодоStop",
+      "quantity": 84,
+      "availability": 1,
+      "price": 6.071,
+      "category": "Гидроизоляция и утеплители"
+    },
+    "Изовер": {
+      "description": "Изовер",
+      "quantity": 89,
+      "availability": 1,
+      "price": 114.789,
+      "category": "Гидроизоляция и утеплители"
+    },
+    "Пенополистирол": {
+      "description": "Пенополистирол",
+      "quantity": 99,
+      "availability": 1,
+      "price": 233.0,
+      "category": "Гидроизоляция и утеплители"
+    },
+    "Пенофол": {
+      "description": "Пенофол",
+      "quantity": 91,
+      "availability": 1,
+      "price": 13.16,
+      "category": "Гидроизоляция и утеплители"
+    },
+    "Пергамин": {
+      "description": "Пергамин",
+      "quantity": 66,
+      "availability": 1,
+      "price": 329.5,
+      "category": "Гидроизоляция и утеплители"
+    },
+    "Руберойд": {
+      "description": "Руберойд РКП-350",
+      "quantity": 0,
+      "availability": 0,
+      "price": 26.523,
+      "category": "Гидроизоляция и утеплители"
+    },
+    "Бетон11": {
+      "description": "Бетон11",
+      "quantity": 90,
+      "availability": 1,
+      "price": 21.0,
+      "category": "Гипсовые изделия, ЖБИ, кирпич"
+    },
+    "ГКЛ": {
+      "description": "ГКЛ влагост",
+      "quantity": 17,
+      "availability": 1,
+      "price": 50.633,
+      "category": "Гипсовые изделия, ЖБИ, кирпич"
+    },
+    "Кирпич": {
+      "description": "Кирпич М-150",
+      "quantity": 1,
+      "availability": 1,
+      "price": 30.407,
+      "category": "Гипсовые изделия, ЖБИ, кирпич"
+    },
+    "Пеноблоки": {
+      "description": "Пеноблоки 75 мм",
+      "quantity": 69,
+      "availability": 1,
+      "price": 9.347,
+      "category": "Гипсовые изделия, ЖБИ, кирпич"
+    },
+    "Плита": {
+      "description": "Плита пазогребневая влагостойкая",
+      "quantity": 7,
+      "availability": 1,
+      "price": 11.184,
+      "category": "Гипсовые изделия, ЖБИ, кирпич"
+    },
+    "Свеча": {
+      "description": "Свеча",
+      "quantity": 97,
+      "availability": 1,
+      "price": 3.944,
+      "category": "Other"
+    },
+    "Ручка": {
+      "description": "Ручка",
+      "quantity": 27,
+      "availability": 1,
+      "price": 17.971,
+      "category": "Other"
+    },
+    "Светильник": {
+      "description": "Светильник",
+      "quantity": 88,
+      "availability": 0,
+      "price": 56.739,
+      "category": "Other"
+    },
+    "Дверь": {
+      "description": "Дверь",
+      "quantity": 55,
+      "availability": 1,
+      "price": 36.0,
+      "category": "Other"
+    },
+    "Качели": {
+      "description": "Крылатые качели",
+      "quantity": 3,
+      "availability": 0,
+      "price": 25.0,
+      "category": "Other"
+    }
+  },
+  "baskets": {
+    "2": {
+      "items": {
+        "Пеноблоки": {
+          "units_quantity": 10,
+          "units_price": 93.47
+        },
+        "Плита": {
+          "units_quantity": 6,
+          "units_price": 67.104
+        },
+        "Руберойд": {
+          "units_quantity": 92,
+          "units_price": 2440.116
+        }
+      },
+      "total_price": 2600.69
+    }
+  },
+  "orders": {
+    "1": {
+      "items": {
+        "Пеноблоки": {
+          "units_quantity": 12,
+          "units_price": 112.164
+        },
+        "Плита": {
+          "units_quantity": 1,
+          "units_price": 11.184
+        },
+        "Руберойд": {
+          "units_quantity": 92,
+          "units_price": 2440.116
+        }
+      },
+      "total_price": 2563.464,
+      "customer_id": "1",
+      "date_purchased": "Sun Mar  7 20:41:22 2021",
+      "order_id": 1
+    }
+  }
+}
