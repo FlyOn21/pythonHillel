@@ -8,7 +8,7 @@ practis/
 
 # C extensions
 *.so
-
+david_beazley/
 # Distribution / packaging
 .Python
 build/
@@ -141,3 +141,5 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+/david_beazley/
+/david_beazley/
