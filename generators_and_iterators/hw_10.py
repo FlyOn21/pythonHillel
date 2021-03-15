@@ -9,9 +9,11 @@ from functools import wraps
 # Если строка уникальна, тогда ее выводим на экран, если нет - скипаем
 
 
-def unique_text_generator(file):
+def unique_text_generator(data_file):
+    """The generator produces one unique line from the file passed to
+     it as input, if the line is repeated, then it is skipped"""
     list_line_file = []
-    with open(os.path.abspath(file), "r", encoding="UTF8") as file:
+    with open(os.path.abspath(data_file), "r", encoding="UTF8") as file:
         while True:
             one_line = file.readline()
             if not one_line:
@@ -19,9 +21,6 @@ def unique_text_generator(file):
             if not one_line.strip() in list_line_file:
                 list_line_file.append(one_line.strip())
                 yield one_line
-
-
-
 
 
 # Задача-2 (оригинальный вариант и его делать не обязательно):
@@ -44,6 +43,7 @@ def unique_text_generator(file):
 # Структура пайплайна:
 # ```
 def coroutine(func):
+    """Coroutine decorator"""
     @wraps(func)
     def wrapper(*args):
         result = func(*args)
@@ -54,6 +54,7 @@ def coroutine(func):
 
 
 def follow(logfile, dispenser):
+    """Main function that starts the pipeline for tracking the data of interest in the log file"""
     with open(logfile, "r", encoding="UTF8") as file:
         try:
             file.seek(0, 2)
@@ -69,6 +70,7 @@ def follow(logfile, dispenser):
 
 @coroutine
 def dispenser(greps):
+    """Tracked signature manager coroutine"""
     while True:
         current_line = yield
         for grep in greps:
@@ -76,20 +78,21 @@ def dispenser(greps):
 
 
 @coroutine
-def grep(find_str, func):
+def grep(find_str, func_printer):
+    """Coroutine for finding the required signature in the passed line"""
     while True:
         current_line = yield
         if find_str in current_line:
-            func.send(current_line)
+            func_printer.send(current_line)
 
 
 @coroutine
 def printer():
+    """Coroutine for outputting the result to the screen
+    if the required signature is found"""
     while True:
         current_line = yield
         print(current_line)
-
-
 
 
 # ```
@@ -183,9 +186,9 @@ if __name__ == "__main__":
 
     print("Task#2")
     follow("logfile.txt", dispenser([
-                grep('Python', printer()),
-                grep('is', printer()),
-                grep('great', printer()),
-            ]))
+        grep('Python', printer()),
+        grep('is', printer()),
+        grep('great', printer()),
+    ]))
     print("Task#3")
     source()
