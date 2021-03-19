@@ -1,0 +1,36 @@
+{%extends "index.html"%}
+
+{%block content%}
+<div class="container">
+  <div class="row justify-content-md-center">
+    {%if weather == False%}
+    <div class="col col-lg-5">
+      <h1>Погода</h1>
+      <p>Данные не доступны</p>
+    {%else%}
+    <div class="col col-lg-5">
+      <h1>Погода</h1>
+        <p> Город {{weather.name}}</p>
+        <p> Температура {{weather.main.temp}} градусов по Цельсию</p>
+        <p> Влажность {{weather.main.humidity}}%</p>
+        <p> Ветер {{weather.wind.speed}} м/с</p>
+        <p> {{weather.weather[0].description}}</p>
+    {%endif%}
+    </div>
+    {%if covid == False%}
+    <div class="col col-lg-5">
+      <h1>Погода</h1>
+      <p>Данные не доступны</p>
+    {%else%}
+      <div class="col col-lg-5">
+        <h1>Статистика Covid-19 </h1>
+        <p> Заболело {{covid.confirmed}}</p>
+        <p> Выздоровили {{covid.recovered}} </p>
+        <p> В тяжолом состоянии {{covid.critical}}</p>
+        <p> Умерло {{covid.deaths}}</p>
+        <p> Последнее обновление {{covid.lastUpdate}}</p>
+      {%endif%}
+    </div>
+  </div>
+</div>
+{%endblock%}
