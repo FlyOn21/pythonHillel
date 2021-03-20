@@ -8,43 +8,51 @@
 # 2)Создать сервер который мог бы принимать GET запросы на адрес (http://localhost/collect_info)
 #
 # 3) В ответе должна быть агрегирована информация полученная от сторонних ресурсов.
-
 import datetime
-import os
 from config import API_KEY
 import aiohttp_jinja2
-import jinja2
 from aiohttp import web, ClientSession
-
-
 
 routes = web.RouteTableDef()
 
 
 @routes.get("/")
 async def main(request: web.Request):
-    context = {
-        'current_date': datetime.date.today()
-    }
+    context = {}
     response = aiohttp_jinja2.render_template("index.html", request,
                                               context=context)
+
     return response
 
 
-
 @routes.get("/collect_info")
-async def collect_info(request: web.Request):
+async def collect_info(request: web.Request, city="Kiev"):
+    # tasks = []
+    # async with ClientSession() as session:
+    #     tasks.append(covid_19("https://covid-19-data.p.rapidapi.com/totals", session))
+    #     tasks.append(weather("https://community-open-weather-map.p.rapidapi.com/weather", session))
+    #     result = await asyncio.wait(tasks)
+    #     for task in result:
+    #         print(list(task))
     async with ClientSession() as session:
-        covid_19_data = await covid_19("https://covid-19-data.p.rapidapi.com/totals", session)
-        weather_data = await weather("https://community-open-weather-map.p.rapidapi.com/weather", session)
+        covid_19_data = await (covid_19("https://covid-19-data.p.rapidapi.com/totals", session))
+        weather_data = await (weather("https://community-open-weather-map.p.rapidapi.com/weather", session, city=city))
+
     context = {
         "weather": weather_data,
         "covid": covid_19_data,
-        "current_date": datetime.date.today()
+        "current_date": datetime.datetime.now().strftime("%d/%m/%Y - %H:%M:%S")
     }
     response = aiohttp_jinja2.render_template("collect_info.html", request,
                                               context=context)
     return response
+
+
+@routes.post("/collect_info/city")
+async def city_weather(request: web.Request):
+    data = await request.post()
+    current_city = data["city"]
+    return await collect_info(request, city=current_city)
 
 
 async def covid_19(url, session):
@@ -56,13 +64,12 @@ async def covid_19(url, session):
     response = await session.get(url, params=params, headers=headers)
     if response.status == 200:
         covid_19_info = await response.json()
-        print(covid_19_info)
         return covid_19_info[0]
     return False
 
 
-async def weather(url, session):
-    params = {"q": "Kiev", "lang": "ru", "units": "metric", "mode": "json"}
+async def weather(url, session, city):
+    params = {"q": city, "lang": "ru", "units": "metric", "mode": "json"}
 
     headers = {
         'x-rapidapi-key': API_KEY,
@@ -72,16 +79,5 @@ async def weather(url, session):
 
     if response.status == 200:
         weather_info = await response.json()
-        print(weather_info)
         return weather_info
     return False
-
-
-app = web.Application()
-aiohttp_jinja2.setup(
-    app, loader=jinja2.FileSystemLoader(os.path.join(os.getcwd(), "templates"))
-)
-app.add_routes(routes)
-
-if __name__ == "__main__":
-    web.run_app(app, host="localhost", port=2000)
