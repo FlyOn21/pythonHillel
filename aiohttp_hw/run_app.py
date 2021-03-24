@@ -21,11 +21,11 @@ def create_app():
     return app
 
 @click.command()
-@click.option("--host","-h", help = "Host start server") #creat flag host for command line
-@click.option("--port", "-p", help="Number of port for server") #creat flag port for command line
+@click.option("--host","-h", help = "Host start server", default= "localhost") #creat flag host for command line
+@click.option("--port", "-p", help="Number of port for server", default = 8000) #creat flag port for command line
 # for example command start app server: python3 run_app.py --host 0.0.0.0 --port 8090
 # or python3 run_app.py -h 0.0.0.0 -p 8090
-def run_app(host="localhost", port=8000):
+def run_app(host, port):
     """Function start app server"""
     return web.run_app(create_app(), host = host, port = port)
 

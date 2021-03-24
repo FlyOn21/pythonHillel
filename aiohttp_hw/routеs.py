@@ -42,12 +42,13 @@ async def collect_info(request: web.Request, city="Kiev"):
     return response
 
 
-@routes.post("/collect_info/city")
+@routes.post("/collect_info")
 async def city_weather(request: web.Request):
     """Endpoint processes a post request from the form to get the weather for the specified city"""
     data = await request.post()
     current_city = data["city"]
     return await collect_info(request, city=current_city)
+
 
 
 async def covid_19(url, session):
