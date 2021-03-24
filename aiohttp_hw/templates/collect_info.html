@@ -4,7 +4,7 @@
 
 <div class="container">
   <div class="row justify-content-md-center">
-            <p> Последнее обновление: {{ current_date }}</p>
+            <p> Последнее обновление: {{current_date}}</p>
               </div>
   <div class="row justify-content-md-center">
   <div class="col col-lg-5">
@@ -15,12 +15,11 @@
                         <p></p>
                     </td>
                     <td class="text-center">
-                         <input type=hidden value= name="link" />
                         <input class="btn btn-secondary" type="submit" value="Запросить погоду">
                     </td>
                 </form>
     {%if weather == False%}
-      <p>Данные не доступны</p>
+      <p>Данные не доступны или вы ошиблись в написнии названия требуемого города</p>
     {%else%}
         <p> Город {{weather.name}}</p>
         <p> Температура {{weather.main.temp}} градусов по Цельсию</p>
@@ -30,13 +29,10 @@
     {%endif%}
    </div>
     <div class="col col-lg-5">
+    <h1>Статистика Covid-19</h1>
     {%if covid == False%}
-
-      <h1>Статистика Covid-19</h1>
-      <p>Данные не доступны</p>
+       <p>Данные не доступны</p>
     {%else%}
-
-        <h1>Статистика Covid-19 </h1>
         <p> Заболело {{covid.confirmed}}</p>
         <p> Выздоровили {{covid.recovered}} </p>
         <p> В тяжолом состоянии {{covid.critical}}</p>

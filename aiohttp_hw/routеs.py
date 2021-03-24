@@ -13,31 +13,25 @@ from config import API_KEY
 import aiohttp_jinja2
 from aiohttp import web, ClientSession
 
-routes = web.RouteTableDef()
+routes = web.RouteTableDef()  # A route definition used to describe routes by decorators.
 
 
 @routes.get("/")
 async def main(request: web.Request):
+    """index.html route"""
     context = {}
     response = aiohttp_jinja2.render_template("index.html", request,
                                               context=context)
-
     return response
 
 
 @routes.get("/collect_info")
 async def collect_info(request: web.Request, city="Kiev"):
-    # tasks = []
-    # async with ClientSession() as session:
-    #     tasks.append(covid_19("https://covid-19-data.p.rapidapi.com/totals", session))
-    #     tasks.append(weather("https://community-open-weather-map.p.rapidapi.com/weather", session))
-    #     result = await asyncio.wait(tasks)
-    #     for task in result:
-    #         print(list(task))
+    """Function collects information from the specified resources
+    and generates a response page for the collect_info endpoint"""
     async with ClientSession() as session:
         covid_19_data = await (covid_19("https://covid-19-data.p.rapidapi.com/totals", session))
         weather_data = await (weather("https://community-open-weather-map.p.rapidapi.com/weather", session, city=city))
-
     context = {
         "weather": weather_data,
         "covid": covid_19_data,
@@ -50,12 +44,15 @@ async def collect_info(request: web.Request, city="Kiev"):
 
 @routes.post("/collect_info/city")
 async def city_weather(request: web.Request):
+    """Endpoint processes a post request from the form to get the weather for the specified city"""
     data = await request.post()
     current_city = data["city"]
     return await collect_info(request, city=current_city)
 
 
 async def covid_19(url, session):
+    """Function sends a request to obtain information about the
+    incidence statistics of covid and returns a data dictionary or False"""
     params = {"format": "json"}
     headers = {
         'x-rapidapi-key': API_KEY,
@@ -69,14 +66,14 @@ async def covid_19(url, session):
 
 
 async def weather(url, session, city):
+    """Function sends a request to obtain information about the
+    weather in current city and returns a data dictionary or False"""
     params = {"q": city, "lang": "ru", "units": "metric", "mode": "json"}
-
     headers = {
         'x-rapidapi-key': API_KEY,
         'x-rapidapi-host': "community-open-weather-map.p.rapidapi.com"
     }
     response = await session.get(url, params=params, headers=headers)
-
     if response.status == 200:
         weather_info = await response.json()
         return weather_info

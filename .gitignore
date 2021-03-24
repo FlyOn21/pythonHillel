@@ -110,6 +110,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+
 .env
 .venv
 env/
@@ -141,4 +142,5 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+regex/
 
