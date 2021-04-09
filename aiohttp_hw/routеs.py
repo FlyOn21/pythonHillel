@@ -8,6 +8,7 @@
 # 2)Создать сервер который мог бы принимать GET запросы на адрес (http://localhost/collect_info)
 #
 # 3) В ответе должна быть агрегирована информация полученная от сторонних ресурсов.
+import asyncio
 import datetime
 from config import API_KEY
 import aiohttp_jinja2
@@ -29,12 +30,19 @@ async def main(request: web.Request):
 async def collect_info(request: web.Request, city="Kiev"):
     """Function collects information from the specified resources
     and generates a response page for the collect_info endpoint"""
+
     async with ClientSession() as session:
-        covid_19_data = await (covid_19("https://covid-19-data.p.rapidapi.com/totals", session))
-        weather_data = await (weather("https://community-open-weather-map.p.rapidapi.com/weather", session, city=city))
+        data_for_tasks = [(covid_19("https://covid-19-data.p.rapidapi.com/totals", session)),
+                          (weather("https://community-open-weather-map.p.rapidapi.com/weather", session, city=city))]
+        tasks = []
+        for task in data_for_tasks:
+            task = asyncio.create_task(task)
+            tasks.append(task)
+        results = await asyncio.gather(*tasks)
+        print(results)
     context = {
-        "weather": weather_data,
-        "covid": covid_19_data,
+        "weather": results[1],
+        "covid": results[0],
         "current_date": datetime.datetime.now().strftime("%d/%m/%Y - %H:%M:%S")
     }
     response = aiohttp_jinja2.render_template("collect_info.html", request,

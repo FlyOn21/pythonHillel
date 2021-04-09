@@ -2,8 +2,11 @@ import json
 import os
 import shutil
 import time
+import traceback
 from pprint import pprint
 from typing import NoReturn, List, Dict, Union, Tuple, Any
+from decimal import Decimal
+# from json.decoder import JSONDecodeError
 
 
 # Задача4
@@ -41,39 +44,40 @@ class DatabaseOpenCloseMixin():
         except FileNotFoundError:
             raise FileNotFoundError("Database is not found")
 
-    def json_load(self) -> NoReturn:
+    def json_load(self) -> Dict:
         try:
             with open(os.path.abspath("shopDataBase.json"), 'r', encoding='UTF-8') as file:
                 return json.load(file)
         except FileNotFoundError:
             raise FileNotFoundError("Database is not found")
-        except json.JSONDecodeError:
-            return shutil.copyfile(os.path.abspath("shopDataBaseBackup.json"), os.path.abspath("shopDataBase.json"))
+        except json.decoder.JSONDecodeError:
+            shutil.copyfile(os.path.abspath("shopDataBaseBackup.json"), os.path.abspath("shopDataBase.json"))
+            return ("Error read database",traceback.format_exc())
 
     def json_dump(self, data: dict) -> NoReturn:
         self._backup_database()
-        try:
-            with open(os.path.join(os.path.abspath("shopDataBase.json")), 'w', encoding='UTF-8') as file:
-                json.dump(data, file, indent=2, ensure_ascii=False)
-        except json.JSONDecodeError:
-            shutil.copyfile(os.path.abspath("shopDataBaseBackup.json"), os.path.abspath("shopDataBase.json"))
-            raise json.JSONDecodeError("Error occurred while writing to the database, no data was entered")
+        if type(data) != dict:
+            raise ValueError("The data transferred for recording does not meet the requirement. The data must be a dictionary.")
+        with open(os.path.join(os.path.abspath("shopDataBase.json")), 'w', encoding='UTF-8') as file:
+            json.dump(data, file, indent=2, ensure_ascii=False)
+
+class PriceDescriptor():
+    """Descriptor class for creating prices in the database including NDS"""
+
+
+    def __get__(self, instance, owner):
+        return instance._price
+
+    def __set__(self, instance, value):
+        if value is None:
+            raise ValueError("Price is always defined")
+        new_price_value = Decimal(value * 1.2)
+        instance._price = new_price_value.quantize(Decimal ("1.000"))
+        return instance._price
 
 
 class ShopWarehouse(DatabaseOpenCloseMixin):
     """Сlass implements work with goods in the store's warehouse"""
-
-    class PriceDescriptor():
-        """Descriptor class for creating prices in the database including NDS"""
-
-        def __get__(self, instance, owner):
-            return instance._price
-
-        def __set__(self, instance, value):
-            if value is None:
-                raise ValueError("Price is always defined")
-            new_price_value = value * 1.2
-            instance._price = new_price_value
 
     price = PriceDescriptor()
 
@@ -84,25 +88,27 @@ class ShopWarehouse(DatabaseOpenCloseMixin):
     def add_products(self, name: str, description: str, quantity: int, price: float, availability: int = 0,
                      category: str = "Other") -> NoReturn:
         """Add products in database"""
-        self._price = price
+        self.price = price
         self._warehouse_data[name] = {
             "description": description,
             "quantity": quantity,
+            "price": float(self.price),
             "availability": availability,
-            "price": round(self._price, 3),
             "category": category
         }
+        print(self.price)
         self._all_data["warehouse"] = self._warehouse_data
         self.json_dump(data=self._all_data)
 
-    def delete_products(self, name: str) -> NoReturn:
+    def delete_products(self, name: str) -> Union[None,str]:
         """Delete products from database"""
         try:
             self._warehouse_data.pop(name)
             self._all_data["warehouse"] = self._warehouse_data
             self.json_dump(data=self._all_data)
+            return
         except KeyError:
-            pass
+            return ("That product not in database or it's delete")
 
     def product_balans(self, name: str) -> str:
         """Method returns the number of items in stock by item name"""
@@ -137,14 +143,14 @@ class CustomerBasket(DatabaseOpenCloseMixin):
         self._all_database = self.json_load()
         self._customer_id = str(customer_id)  # basket owner id
 
-    def add_products_in_basket(self, product_name: str, units_quantity: int = 1) -> Union[Tuple[bool, str], Any]:
+    def add_products_in_basket(self, product_name: str, units_quantity: int = 1) -> Union[Tuple[bool, str], None]:
         """Add products in customer basket"""
         customer_basket = self._open_customer_basket()
         new_basket = self._check_add_in_basket(product_name, units_quantity, customer_basket)
         if not isinstance(new_basket, tuple):
             self._all_database["baskets"][self._customer_id] = new_basket
             self.json_dump(data=self._all_database)
-            return
+            return "OK"
         return new_basket
 
     def _open_customer_basket(self) -> Dict:
@@ -158,15 +164,14 @@ class CustomerBasket(DatabaseOpenCloseMixin):
         Tuple[bool, str], bool]:
         """Pre-check when adding an item to the basket"""
         try:
-            warehouse_unit = self._all_database["warehouse"][product_name]  # find curent product in database
+            warehouse_unit = self._all_database["warehouse"][product_name]  # find current product in database
         except KeyError:
             return (False, "Product not found")
         if warehouse_unit["availability"]:  # checking flag availability product
             units_price = warehouse_unit["price"]  # unit price according to the database
             try:
                 if basket["items"][product_name]:  # checks if the given item is already in the basket
-                    units_quantity_current = basket["items"][product_name][
-                        "units_quantity"]  # current product quantity in basket
+                    units_quantity_current = basket["items"][product_name]["units_quantity"]  # current product quantity in basket
                     new_units_quantity = units_quantity_current + units_quantity  # new product quantity in basket
                     checking_quantity = self._check_quantity(warehouse_unit,
                                                              new_units_quantity)  # checking if it is available
@@ -286,20 +291,21 @@ class CustomerOrder(CustomerBasket, DatabaseOpenCloseMixin):
 
 if __name__ == "__main__":
     unit_one = ShopWarehouse()
-    unit_one.add_products("Качели", "Крылатые качели", 3, 25.0)
-    unit_one.delete_products("Окно")
-    print(unit_one.product_balans("Пенофол"))
-    pprint(unit_one.all_products_quantity())
+    # unit_one.add_products("Качели", "Крылатые качели", 3, 25.0)
+    # unit_one.add_products("Качели_обычные", "Обычные качели", 5, 15.0)
+    # unit_one.delete_products("Окно")
+    # print(unit_one.product_balans("Пенофол"))
+    # print(unit_one.all_products_quantity())
     print(unit_one.category_items("Other"))
-
-    unit_second = CustomerBasket(customer_id=1)
-    unit_second.add_products_in_basket("Пеноблоки", 12)
-    unit_second.add_products_in_basket("Кирпич", 6)
-    unit_second.add_products_in_basket("Плита", 10)
-    unit_second.add_products_in_basket("Плита", 1)
-    print(unit_second.basket_overview())
-    unit_second.add_products_in_basket("Руберойд", 92)
-
-    unit_third = CustomerOrder(2)
-    print(unit_third.place_an_order())
-    unit_third.print_order_details(2)
+    #
+    # unit_second = CustomerBasket(customer_id=1)
+    # unit_second.add_products_in_basket("Пеноблоки", 12)
+    # unit_second.add_products_in_basket("Кирпич", 6)
+    # unit_second.add_products_in_basket("Плита", 10)
+    # unit_second.add_products_in_basket("Плита", 1)
+    # print(unit_second.basket_overview())
+    # unit_second.add_products_in_basket("Руберойд", 92)
+    #
+    # unit_third = CustomerOrder(2)
+    # print(unit_third.place_an_order())
+    # unit_third.print_order_details(2)

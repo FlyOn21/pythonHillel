@@ -1,0 +1,25 @@
+{
+  "warehouse": {
+    "Гидростеклоизол": {
+      "description": "Гидростеклоизол",
+      "quantity": 73,
+      "availability": 1,
+      "price": 26.5,
+      "category": "Гидроизоляция и утеплители"
+    },
+    "Глимс": {
+      "description": "Глимс ВодоStop",
+      "quantity": 84,
+      "availability": 1,
+      "price": 6.071,
+      "category": "Гидроизоляция и утеплители"
+    },
+    "Качели": {
+      "description": "Крылатые качели",
+      "quantity": 3,
+      "price": 30.0,
+      "availability": 0,
+      "category": "Other"
+    }
+  }
+}
