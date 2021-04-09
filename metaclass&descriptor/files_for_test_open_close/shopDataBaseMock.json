@@ -108,8 +108,15 @@
     "Качели": {
       "description": "Крылатые качели",
       "quantity": 3,
+      "price": 30.0,
       "availability": 0,
-      "price": 25.0,
+      "category": "Other"
+    },
+    "Качели_обычные": {
+      "description": "Обычные качели",
+      "quantity": 5,
+      "price": 18.0,
+      "availability": 0,
       "category": "Other"
     }
   },
@@ -130,6 +137,19 @@
         }
       },
       "total_price": 2600.69
+    },
+    "1": {
+      "items": {
+        "Пеноблоки": {
+          "units_quantity": 48,
+          "units_price": 448.656
+        },
+        "Плита": {
+          "units_quantity": 4,
+          "units_price": 44.736
+        }
+      },
+      "total_price": 493.392
     }
   },
   "orders": {
