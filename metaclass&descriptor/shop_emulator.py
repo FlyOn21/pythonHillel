@@ -106,7 +106,7 @@ class ShopWarehouse(DatabaseOpenCloseMixin):
         except KeyError:
             return ("That product not in database or it's delete")
 
-    def product_balans(self, name: str) -> str:
+    def product_balance(self, name: str) -> str:
         """Method returns the number of items in stock by item name"""
         try:
             product_quantity = self._warehouse_data[name]["quantity"]
@@ -142,12 +142,13 @@ class CustomerBasket(DatabaseOpenCloseMixin):
     def add_products_in_basket(self, product_name: str, units_quantity: int = 1) -> Union[Tuple[bool, str], None]:
         """Add products in customer basket"""
         customer_basket = self._open_customer_basket()
-        new_basket = self._check_add_in_basket(product_name, units_quantity, customer_basket)
-        if not isinstance(new_basket, tuple):
-            self._all_database["baskets"][self._customer_id] = new_basket
+        check_add_product = self._check_add_in_basket(product_name, units_quantity, customer_basket)
+        if not isinstance(check_add_product, tuple):
+            self._all_database["baskets"][self._customer_id] = check_add_product
             self.json_dump(data=self._all_database)
             return "OK"
-        return new_basket
+        return check_add_product
+
 
     def _open_customer_basket(self) -> Dict:
         """Checks if the user has a basket or creates a new one"""
